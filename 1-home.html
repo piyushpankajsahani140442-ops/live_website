@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Food Mania - Home</title>
+<!-- main stylesheet (one level up, because this page is inside the Client folder) -->
+<style>
+    /* All page design is written here. No separate CSS file is needed. */
+/* ===== Food Mania - main stylesheet (client + shared) ===== */
+/* ---------- colours and basic values (change colours only here) ---------- */
+:root {
+  --green: #2E7D32; --green-dark: #1B5E20; --green-light: #F1F8E9;
+  --accent: #E65100; --text: #263238; --muted: #607D8B;
+  --bg: #FAFAF5; --border: #E0E0E0; --radius: 10px;
+  --shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Poppins', Arial, sans-serif; font-size: 16px; line-height: 1.5; color: var(--text); background: var(--bg); }
+a { color: var(--green); text-decoration: none; }
+img { max-width: 100%; display: block; }
+h1 { font-size: 36px; margin: 24px 0 16px; color: var(--green-dark); }
+h2 { font-size: 28px; margin-bottom: 16px; color: var(--green-dark); }
+h3 { font-size: 18px; }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+.section { padding: 32px 0; border-top: 1px dashed var(--border); }
+.muted { color: var(--muted); font-size: 14px; }
+.hidden { display: none; }
+
+/* ---------- navbar ---------- */
+.navbar { display: flex; justify-content: space-between; align-items: center; height: 64px; padding: 0 24px; background: #fff; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 10; }
+.logo { display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 20px; color: var(--green-dark); }
+.logo img { height: 40px; }
+.navbar nav a { margin: 0 12px; color: var(--text); font-weight: 500; padding-bottom: 4px; }
+.navbar nav a:hover, .navbar nav a.active { color: var(--green); border-bottom: 2px solid var(--green); }
+.nav-right { display: flex; gap: 12px; align-items: center; }
+.nav-right a { border: 1px solid var(--text); border-radius: 8px; padding: 4px 12px; color: var(--text); font-size: 14px; }
+.nav-right a#loginLink { background: var(--green); color: #fff; border-color: var(--green); font-weight: bold; }
+
+/* ---------- buttons ---------- */
+.btn { display: inline-block; background: var(--accent); color: #fff; border: none; padding: 10px 20px; border-radius: 8px; font-family: inherit; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+.btn:hover { background: #BF360C; }
+.btn-sm { padding: 6px 12px; font-size: 14px; }
+.btn-green { background: var(--green); } .btn-green:hover { background: var(--green-dark); }
+.btn-outline { background: #fff; color: var(--text); border: 1px solid var(--text); } .btn-outline:hover { background: var(--green-light); }
+.btn-red { background: #C62828; } .btn-red:hover { background: #8E0000; }
+
+/* ---------- forms ---------- */
+label { display: block; font-size: 13px; color: var(--muted); text-transform: uppercase; margin: 12px 0 4px; }
+input, select, textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius); font-family: inherit; font-size: 16px; background: #fff; }
+input:focus, select:focus, textarea:focus { outline: 2px solid var(--green); }
+input[type=checkbox], input[type=radio] { width: auto; margin-right: 8px; }
+textarea { min-height: 90px; resize: vertical; }
+.box { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); }
+.error { color: #C62828; font-size: 14px; margin-top: 8px; min-height: 20px; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+
+/* ---------- hero ---------- */
+.hero { display: flex; align-items: center; gap: 32px; min-height: 420px; padding: 24px 0; }
+.hero .text { flex: 1 1 0; min-width: 0; } .hero .text p { margin: 16px 0 24px; color: var(--muted); }
+.hero img { flex: 1 1 0; min-width: 0; width: 100%; border-radius: var(--radius); max-height: 400px; object-fit: cover; }
+
+/* ---------- cards in a grid ---------- */
+.card-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.card-grid.grid3 { grid-template-columns: repeat(3, 1fr); }
+.card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); transition: transform 0.3s; }
+.card:hover { transform: translateY(-4px); }
+.card-body { padding: 12px 16px 16px; }
+.card-row { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+.dish-img { width: 100%; height: 180px; object-fit: cover; background: #E0E0E0; }
+.cat-card img { width: 100%; height: 150px; object-fit: cover; }
+.cat-card h3 { text-align: center; padding: 12px; }
+.stepper { display: inline-flex; align-items: center; border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
+.stepper button { border: none; background: #fff; width: 28px; height: 28px; cursor: pointer; font-size: 16px; }
+.stepper span { min-width: 24px; text-align: center; font-size: 14px; }
+.why { text-align: center; padding: 16px; } .why .emoji { font-size: 40px; }
+.stars { color: #F9A825; }
+.review { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+
+/* ---------- menu page ---------- */
+.menu-layout { display: grid; grid-template-columns: 240px 1fr; gap: 24px; margin-bottom: 32px; }
+.toolbar { display: grid; grid-template-columns: 1fr 220px; gap: 16px; margin-bottom: 16px; }
+.chip { display: inline-block; border: 1px solid var(--green); color: var(--green); border-radius: 16px; padding: 2px 12px; font-size: 13px; margin: 2px 4px 2px 0; }
+.pager { display: flex; justify-content: center; gap: 8px; margin-top: 24px; flex-wrap: wrap; }
+.pager button { border: 1px solid var(--border); background: #fff; border-radius: 6px; padding: 4px 12px; cursor: pointer; font-family: inherit; }
+.pager button.on { background: var(--green); color: #fff; border-color: var(--green); }
+
+/* ---------- dish detail ---------- */
+.detail { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; padding: 24px 0; }
+.detail img.big { width: 100%; height: 360px; object-fit: cover; border-radius: var(--radius); }
+.thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 8px; }
+.thumbs img { height: 70px; width: 100%; object-fit: cover; border-radius: 6px; }
+.price { font-size: 28px; font-weight: bold; margin: 8px 0; }
+
+/* ---------- tables ---------- */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; background: #fff; }
+th { background: #EEE; font-size: 13px; text-transform: uppercase; text-align: left; }
+th, td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.thumb60 { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; }
+.cart-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; align-items: start; }
+.profile-layout { grid-template-columns: 1fr 2fr; }
+.bill-row { display: flex; justify-content: space-between; padding: 4px 0; }
+.bill-total { border-top: 1px solid var(--border); margin-top: 8px; padding-top: 8px; font-weight: bold; }
+
+/* ---------- order status colours (same everywhere) ---------- */
+.badge { display: inline-block; padding: 2px 12px; border-radius: 16px; color: #fff; font-size: 13px; white-space: nowrap; }
+.st-Pending { background: #F9A825; } .st-Confirmed { background: #1976D2; } .st-Preparing { background: #EF6C00; }
+.st-Out-for-Delivery { background: #6A1B9A; } .st-Delivered { background: #2E7D32; } .st-Cancelled { background: #C62828; }
+
+/* ---------- order tracking ---------- */
+.steps { display: flex; justify-content: space-between; margin: 24px 0; }
+.step { flex: 1; text-align: center; position: relative; font-size: 14px; }
+.step .dot { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--border); background: #fff; margin: 0 auto 8px; line-height: 32px; font-weight: bold; }
+.step.done .dot { background: var(--green); border-color: var(--green); color: #fff; }
+.step.now { font-weight: bold; }
+
+/* ---------- footer ---------- */
+.footer { background: var(--green-dark); color: #fff; margin-top: 48px; padding: 32px 24px 16px; }
+.footer-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px; }
+.footer a { color: #C8E6C9; display: block; font-size: 14px; } .footer h4 { margin-bottom: 8px; } .footer p { font-size: 14px; }
+.copy { max-width: 1100px; margin: 24px auto 0; border-top: 1px solid #4CAF50; padding-top: 12px; font-size: 13px; }
+
+/* ---------- responsive ---------- */
+@media (max-width: 900px) {
+  .card-grid, .card-grid.grid3 { grid-template-columns: repeat(2, 1fr); }
+  .menu-layout, .cart-layout, .profile-layout, .detail, .two-col { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+  h1 { font-size: 28px; }
+  .card-grid, .card-grid.grid3 { grid-template-columns: 1fr; }
+  .navbar { flex-direction: column; height: auto; gap: 8px; padding: 8px; }
+  .navbar nav { display: flex; flex-wrap: wrap; justify-content: center; }
+  .hero { flex-direction: column; } .toolbar { grid-template-columns: 1fr; } .footer-grid { grid-template-columns: 1fr; }
+  .steps { font-size: 11px; }
+}
+
+
+/* Use a common computer font so the page also works offline. */
+body { font-family: Arial, Helvetica, sans-serif; }
+
+/* Orange and green Food Mania theme */
+:root { --green: #287642; --green-dark: #174d2d; --green-light: #edf7ef; --accent: #ed7927; }
+  </style>
+</head>
+<body>
+<!-- Food Mania page. HTML, CSS and JavaScript are all kept in this file. -->
+  <!-- ===== NAVBAR (same on every client page) ===== -->
+  <header class="navbar">
+    <a href="1-home.html" class="logo"><img data-food-image="logo" alt="Food Mania logo">Food Mania</a>
+    <nav>
+      <a href="1-home.html">Home</a>
+      <a href="5-menu.html">Menu</a>
+      <a href="8-track-order.html">Track Order</a>
+      <a href="2-about-us.html">About Us</a>
+      <a href="3-contact.html">Contact</a>
+    </nav>
+    <div class="nav-right">
+      <a href="7-cart.html">Cart (<span id="cartCount">0</span>)</a>
+      <a href="4-login-signup.html" id="loginLink">Login / Sign Up</a>
+    </div>
+  </header>
+
+  <!-- ===== PAGE CONTENT STARTS HERE ===== -->
+  <main class="container">
+    <!-- hero banner -->
+    <section class="hero">
+      <div class="text">
+        <h1>Pure-Veg. Freshly Made. Delivered Fast.</h1>
+        <p>Order from Food Mania's 100% vegetarian menu - appetizers, mains, combos &amp; desserts.</p>
+        <a class="btn" href="5-menu.html">Order Now</a>
+      </div>
+      <img data-food-image="hero" alt="Food Mania banner">
+    </section>
+    <!-- categories -->
+    <section class="section">
+      <h2>Shop by Category</h2>
+      <div class="card-grid">
+        <a class="card cat-card" href="5-menu.html?category=Appetizers"><img data-food-image="category-appetizers" alt="Appetizers"><h3>Appetizers</h3></a>
+        <a class="card cat-card" href="5-menu.html?category=Main Course"><img data-food-image="category-main-course" alt="Main Course"><h3>Main Course</h3></a>
+        <a class="card cat-card" href="5-menu.html?category=Special Combos"><img data-food-image="category-combos" alt="Special Combos"><h3>Special Combos</h3></a>
+        <a class="card cat-card" href="5-menu.html?category=Desserts"><img data-food-image="category-desserts" alt="Desserts"><h3>Desserts</h3></a>
+      </div>
+    </section>
+    <!-- popular dishes (filled by home.js) -->
+    <section class="section">
+      <h2>Popular Dishes</h2>
+      <div class="card-grid" id="popular"></div>
+    </section>
+    <!-- why us -->
+    <section class="section">
+      <h2>Why Food Mania?</h2>
+      <div class="card-grid grid3">
+        <div class="why"><div class="emoji">&#129367;</div><h3>100% Vegetarian</h3><p class="muted">Every dish is pure-veg, always.</p></div>
+        <div class="why"><div class="emoji">&#9889;</div><h3>Fast Delivery</h3><p class="muted">Hot &amp; fresh, delivered on time.</p></div>
+        <div class="why"><div class="emoji">&#128205;</div><h3>Live Order Tracking</h3><p class="muted">Know exactly where your food is.</p></div>
+      </div>
+    </section>
+    <!-- reviews (filled by home.js) -->
+    <section class="section">
+      <h2>What Our Customers Say</h2>
+      <div class="card-grid grid3" id="reviews"></div>
+    </section>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div><h4>Food Mania</h4><p>100% pure-vegetarian food ordering &amp; restaurant management platform.</p></div>
+      <div><h4>Quick Links</h4><a href="1-home.html">Home</a><a href="5-menu.html">Menu</a><a href="8-track-order.html">Track Order</a><a href="3-contact.html">Contact Us</a></div>
+      <div><h4>Categories</h4><a href="5-menu.html?category=Appetizers">Appetizers</a><a href="5-menu.html?category=Main Course">Main Course</a><a href="5-menu.html?category=Special Combos">Special Combos</a><a href="5-menu.html?category=Desserts">Desserts</a></div>
+      <div><h4>More</h4><a href="10-js-validation.html">JavaScript Validation Demo</a><a href="../Admin/1-login.html">Admin Panel</a></div>
+    </div>
+    <p class="copy">&copy; 2026 Food Mania. Built by Piyushpankaj Sahani (92500103021) | Built with HTML, CSS, JavaScript &amp; LocalStorage</p>
+  </footer>
+
+  <!-- scripts at the end so the page loads first -->
+  
+<script>
+/* ============================================================
+   FOOD MANIA LOCAL IMAGE FILES
+   Images are included in this page folder under images/.
+   Keep the filenames and the relative paths below unchanged.
+   ============================================================ */
+var FOOD_IMAGE_LINKS = {
+  // LOGO
+  "logo": "images/logo.png",
+  // HOMEPAGE HERO BANNER
+  "hero": "images/hero.jpg",
+  // APPETIZERS CATEGORY
+  "category-appetizers": "images/category-appetizers.jpg",
+  // MAIN COURSE CATEGORY
+  "category-main-course": "images/category-main-course.jpg",
+  // SPECIAL COMBOS CATEGORY
+  "category-combos": "images/category-combos.jpg",
+  // DESSERTS CATEGORY
+  "category-desserts": "images/category-desserts.jpg",
+  // ABOUT US RESTAURANT PHOTO
+  "restaurant": "images/restaurant.jpg",
+  // RESTAURANT MAP PHOTO
+  "map": "images/map.jpg",
+  // ADMIN OR CUSTOMER PROFILE PHOTO
+  "avatar": "images/avatar.jpg",
+  // BUTTER NAAN FOOD PHOTO
+  "dish-butter-naan": "images/dish-butter-naan.jpg",
+  // CHOCO BROWNIE FOOD PHOTO
+  "dish-choco-brownie": "images/dish-choco-brownie.jpg",
+  // COLD COFFEE FOOD PHOTO
+  "dish-cold-coffee": "images/dish-cold-coffee.jpg",
+  // CRISPY CORN FOOD PHOTO
+  "dish-crispy-corn": "images/dish-crispy-corn.jpg",
+  // DAL MAKHANI FOOD PHOTO
+  "dish-dal-makhani": "images/dish-dal-makhani.jpg",
+  // DAL RICE COMBO FOOD PHOTO
+  "dish-dal-rice-combo": "images/dish-dal-rice-combo.jpg",
+  // DEFAULT FOOD PHOTO
+  "dish-default": "images/dish-default.jpg",
+  // GULAB JAMUN FOOD PHOTO
+  "dish-gulab-jamun": "images/dish-gulab-jamun.jpg",
+  // HARA BHARA KEBAB FOOD PHOTO
+  "dish-hara-bhara-kebab": "images/dish-hara-bhara-kebab.jpg",
+  // JEERA RICE FOOD PHOTO
+  "dish-jeera-rice": "images/dish-jeera-rice.jpg",
+  // KULFI FOOD PHOTO
+  "dish-kulfi": "images/dish-kulfi.jpg",
+  // MASALA DOSA FOOD PHOTO
+  "dish-masala-dosa": "images/dish-masala-dosa.jpg",
+  // PANEER BUTTER MASALA FOOD PHOTO
+  "dish-paneer-butter-masala": "images/dish-paneer-butter-masala.jpg",
+  // PANEER NAAN COMBO FOOD PHOTO
+  "dish-paneer-naan-combo": "images/dish-paneer-naan-combo.jpg",
+  // PANEER TIKKA FOOD PHOTO
+  "dish-paneer-tikka": "images/dish-paneer-tikka.jpg",
+  // RASMALAI FOOD PHOTO
+  "dish-rasmalai": "images/dish-rasmalai.jpg",
+  // SPECIAL THALI COMBO FOOD PHOTO
+  "dish-special-thali-combo": "images/dish-special-thali-combo.jpg",
+  // VEG KOLHAPURI FOOD PHOTO
+  "dish-veg-kolhapuri": "images/dish-veg-kolhapuri.jpg",
+  // VEG MANCHURIAN FOOD PHOTO
+  "dish-veg-manchurian": "images/dish-veg-manchurian.jpg",
+};
+
+// Return the local image path; direct external image links are also accepted.
+function getDriveImageLink(link) {
+  if (link === "") {
+    return ""; // No link has been added yet.
+  }
+  var fileId = "";
+  var filePart = "/file/d/";
+  var start = link.indexOf(filePart);
+  if (start !== -1) {
+    var rest = link.substring(start + filePart.length);
+    fileId = rest.split("/")[0];
+  } else {
+    var idPart = "id=";
+    var idStart = link.indexOf(idPart);
+    if (idStart !== -1) {
+      var idRest = link.substring(idStart + idPart.length);
+      fileId = idRest.split("&")[0];
+    }
+  }
+  if (fileId !== "") {
+    return "https://drive.google.com/uc?export=view&id=" + fileId;
+  }
+  return link; // Also accepts a direct image URL.
+}
+
+// Show a clear label if an expected image is unavailable.
+function makeImagePlaceholder(label) {
+  var words = label.replace("dish-", "").replace("category-", "").replace(/-/g, " ");
+  var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="700" height="450" viewBox="0 0 700 450">' +
+    '<rect width="700" height="450" fill="#f2f5eb"/>' +
+    '<rect x="18" y="18" width="664" height="414" rx="22" fill="#fff" stroke="#e5a04b" stroke-width="4"/>' +
+    '<circle cx="350" cy="170" r="64" fill="#267344"/>' +
+    '<path d="M310 175 Q350 90 390 175 Q350 245 310 175" fill="#f58a27"/>' +
+    '<text x="350" y="290" text-anchor="middle" font-family="Arial" font-size="25" font-weight="bold" fill="#234b32">IMAGE REQUIRED</text>' +
+    '<text x="350" y="335" text-anchor="middle" font-family="Arial" font-size="22" fill="#c45c16">' + words.toUpperCase() + '</text></svg>';
+  return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
+}
+
+// Get the correct picture for a name such as paneer-tikka.jpg.
+function getFoodImageUrl(imageName) {
+  var key = imageName;
+  if (key.indexOf(".jpg") !== -1) { key = key.substring(0, key.lastIndexOf(".")); }
+  if (key.indexOf(".png") !== -1) { key = key.substring(0, key.lastIndexOf(".")); }
+  if (key.indexOf(".jpeg") !== -1) { key = key.substring(0, key.lastIndexOf(".")); }
+  if (key.indexOf(".webp") !== -1) { key = key.substring(0, key.lastIndexOf(".")); }
+  if (key.indexOf("dish-") !== 0 && FOOD_IMAGE_LINKS["dish-" + key] !== undefined) { key = "dish-" + key; }
+  var link = FOOD_IMAGE_LINKS[key];
+  var finalLink = "";
+  if (link !== undefined) { finalLink = getDriveImageLink(link); }
+  if (finalLink === "") { return makeImagePlaceholder(key); }
+  return finalLink;
+}
+
+// Load the bundled local images into the HTML image tags.
+function loadFoodPageImages() {
+  var pictures = document.querySelectorAll("[data-food-image]");
+  for (var i = 0; i < pictures.length; i++) {
+    var imageName = pictures[i].getAttribute("data-food-image");
+    pictures[i].src = getFoodImageUrl(imageName);
+    pictures[i].onerror = function () {
+      this.onerror = null;
+      this.src = makeImagePlaceholder(this.getAttribute("data-food-image"));
+    };
+  }
+}
+</script>
+<script>
+/* JavaScript from data.js - kept inside this HTML page. */
+// ===== data.js: shared LocalStorage helpers and realistic demo data =====
+// The example records help the Client and Admin pages look complete on first run.
+// They are demo records only; all changes made in the website are saved in this browser.
+
+var STATUSES = ['Pending', 'Confirmed', 'Preparing', 'Out for Delivery', 'Delivered'];
+
+// ---------- local storage ----------
+function getData(key) {
+  var text = localStorage.getItem(key);
+  if (text === null) {
+    return [];
+  }
+  try {
+    var value = JSON.parse(text);
+    return Array.isArray(value) ? value : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+function saveData(key, list) {
+  localStorage.setItem(key, JSON.stringify(list));
+}
+
+// ---------- small helper functions ----------
+function money(n) {
+  return '\u20B9' + n;
+}
+
+function imgPath(fileName) {
+  return getFoodImageUrl('dish-' + fileName);
+}
+
+function statusClass(status) {
+  return 'st-' + status.split(' ').join('-');
+}
+
+function badge(status) {
+  return '<span class="badge ' + statusClass(status) + '">' + status + '</span>';
+}
+
+function starText(n) {
+  var text = '';
+  for (var i = 1; i <= 5; i++) {
+    text = text + (i <= n ? '\u2605' : '\u2606');
+  }
+  return text;
+}
+
+function twoDigits(n) {
+  return n < 10 ? '0' + n : '' + n;
+}
+
+// Create dates relative to today so the weekly dashboard chart is always populated.
+function isoDate(daysAgo) {
+  var d = new Date();
+  d.setDate(d.getDate() - daysAgo);
+  return d.getFullYear() + '-' + twoDigits(d.getMonth() + 1) + '-' + twoDigits(d.getDate());
+}
+
+function getParam(name) {
+  var query = window.location.search;
+  if (query === '') {
+    return null;
+  }
+  var parts = query.substring(1).split('&');
+  for (var i = 0; i < parts.length; i++) {
+    var pair = parts[i].split('=');
+    if (pair[0] === name) {
+      return decodeURIComponent(pair[1]);
+    }
+  }
+  return null;
+}
+
+function showBox(id) {
+  document.getElementById(id).style.display = 'block';
+}
+function hideBox(id) {
+  document.getElementById(id).style.display = 'none';
+}
+function toggleBox(id) {
+  var box = document.getElementById(id);
+  box.style.display = box.style.display === 'block' ? 'none' : 'block';
+}
+
+// ---------- demo data builders ----------
+function makeDish(id, name, category, price, image, description, allergens, popularity) {
+  return {
+    id: id,
+    name: name,
+    category: category,
+    price: price,
+    image: image + '.jpg',
+    description: description,
+    allergens: allergens,
+    popularity: popularity,
+    available: true
+  };
+}
+
+function makeItem(id, name, price, image, qty) {
+  return { id: id, name: name, price: price, image: image, qty: qty };
+}
+
+function makeOrder(number, email, customer, items, total, payment, status, daysAgo, address, phone, time) {
+  return {
+    id: 'FM' + (10230 + number),
+    userEmail: email,
+    customer: customer,
+    items: items,
+    total: total,
+    payment: payment,
+    address: address,
+    phone: phone,
+    status: status,
+    date: isoDate(daysAgo),
+    time: time
+  };
+}
+
+// Seed the upgraded demo records once. Versioning also refreshes older/empty demo data
+// the first time this updated project is opened, without resetting it on every page visit.
+var FOODMANIA_DEMO_VERSION = '3';
+if (localStorage.getItem('fm_demo_seed_version') !== FOODMANIA_DEMO_VERSION) {
+  // ---------- 18 sample vegetarian menu items ----------
+  var startMenu = [];
+  startMenu.push(makeDish(1, 'Paneer Tikka', 'Appetizers', 180, 'paneer-tikka', 'Soft paneer cubes grilled with spices.', 'Dairy', 95));
+  startMenu.push(makeDish(2, 'Crispy Corn', 'Appetizers', 140, 'crispy-corn', 'Golden fried corn tossed in masala.', 'None', 70));
+  startMenu.push(makeDish(3, 'Veg Manchurian', 'Appetizers', 150, 'veg-manchurian', 'Crispy veg balls in a tangy sauce.', 'Soy', 88));
+  startMenu.push(makeDish(4, 'Hara Bhara Kebab', 'Appetizers', 160, 'hara-bhara-kebab', 'Spinach and green pea patties.', 'None', 60));
+  startMenu.push(makeDish(5, 'Paneer Butter Masala', 'Main Course', 220, 'paneer-butter-masala', 'Paneer cubes in a rich creamy tomato gravy.', 'Dairy, Nuts', 92));
+  startMenu.push(makeDish(6, 'Veg Kolhapuri', 'Main Course', 200, 'veg-kolhapuri', 'Spicy mixed vegetables in Kolhapuri masala.', 'None', 65));
+  startMenu.push(makeDish(7, 'Dal Makhani', 'Main Course', 170, 'dal-makhani', 'Black lentils slow cooked with butter.', 'Dairy', 80));
+  startMenu.push(makeDish(8, 'Masala Dosa', 'Main Course', 130, 'masala-dosa', 'Crisp dosa filled with potato masala.', 'None', 85));
+  startMenu.push(makeDish(9, 'Butter Naan', 'Main Course', 50, 'butter-naan', 'Soft tandoor bread brushed with butter.', 'Gluten, Dairy', 75));
+  startMenu.push(makeDish(10, 'Jeera Rice', 'Main Course', 110, 'jeera-rice', 'Basmati rice tempered with cumin.', 'None', 55));
+  startMenu.push(makeDish(11, 'Special Thali Combo', 'Special Combos', 320, 'special-thali-combo', 'Full thali: 2 sabzi, dal, rice, roti, sweet.', 'Gluten, Dairy', 90));
+  startMenu.push(makeDish(12, 'Dal Rice Combo', 'Special Combos', 180, 'dal-rice-combo', 'Dal tadka with jeera rice and salad.', 'None', 58));
+  startMenu.push(makeDish(13, 'Paneer Naan Combo', 'Special Combos', 260, 'paneer-naan-combo', 'Paneer masala with 2 butter naan.', 'Gluten, Dairy', 72));
+  startMenu.push(makeDish(14, 'Gulab Jamun (2 pc)', 'Desserts', 90, 'gulab-jamun', 'Warm milk dumplings in sugar syrup.', 'Dairy, Gluten', 82));
+  startMenu.push(makeDish(15, 'Cold Coffee', 'Desserts', 70, 'cold-coffee', 'Chilled creamy coffee.', 'Dairy', 68));
+  startMenu.push(makeDish(16, 'Rasmalai', 'Desserts', 110, 'rasmalai', 'Soft cheese discs in saffron milk.', 'Dairy, Nuts', 62));
+  startMenu.push(makeDish(17, 'Kulfi', 'Desserts', 80, 'kulfi', 'Traditional frozen milk dessert.', 'Dairy, Nuts', 50));
+  startMenu.push(makeDish(18, 'Choco Brownie', 'Desserts', 120, 'choco-brownie', 'Eggless chocolate brownie.', 'Gluten, Dairy', 66));
+  saveData('fm_menu', startMenu);
+
+  // ---------- 10 sample customers ----------
+  var startUsers = [
+    { id: 1, name: 'Pankaj', email: 'pankaj@example.com', phone: '9000000001', password: 'Demo@123' },
+    { id: 2, name: 'Satyam', email: 'satyam@example.com', phone: '9000000002', password: 'Demo@123' },
+    { id: 3, name: 'Harsh', email: 'harsh@example.com', phone: '9000000003', password: 'Demo@123' },
+    { id: 4, name: 'Aman', email: 'aman@example.com', phone: '9000000004', password: 'Demo@123' },
+    { id: 5, name: 'Mitul', email: 'mitul@example.com', phone: '9000000005', password: 'Demo@123' },
+    { id: 6, name: 'Haresh', email: 'haresh@example.com', phone: '9000000006', password: 'Demo@123' },
+    { id: 7, name: 'Vishal', email: 'vishal@example.com', phone: '9000000007', password: 'Demo@123' },
+    { id: 8, name: 'Tushar', email: 'tushar@example.com', phone: '9000000008', password: 'Demo@123' },
+    { id: 9, name: 'Yashraj', email: 'yashraj@example.com', phone: '9000000009', password: 'Demo@123' },
+    { id: 10, name: 'Jenil', email: 'jenil@example.com', phone: '9000000010', password: 'Demo@123' }
+  ];
+  saveData('fm_users', startUsers);
+
+  // ---------- 12 sample orders spread across the last 7 days ----------
+  // All customer names/emails/phone numbers and addresses below are fictional demo data.
+  var startOrders = [];
+  startOrders.push(makeOrder(1, 'pankaj@example.com', 'Pankaj', [
+    makeItem(1, 'Paneer Tikka', 180, 'paneer-tikka.jpg', 1),
+    makeItem(3, 'Veg Manchurian', 150, 'veg-manchurian.jpg', 1),
+    makeItem(11, 'Special Thali Combo', 320, 'special-thali-combo.jpg', 1)
+  ], 670, 'UPI', 'Delivered', 6, 'University Road, Rajkot', '9000000001', '12:15 PM'));
+
+  startOrders.push(makeOrder(2, 'satyam@example.com', 'Satyam', [
+    makeItem(5, 'Paneer Butter Masala', 220, 'paneer-butter-masala.jpg', 1),
+    makeItem(9, 'Butter Naan', 50, 'butter-naan.jpg', 2)
+  ], 340, 'UPI', 'Delivered', 5, 'Kalawad Road, Rajkot', '9000000002', '01:05 PM'));
+
+  startOrders.push(makeOrder(3, 'harsh@example.com', 'Harsh', [
+    makeItem(1, 'Paneer Tikka', 180, 'paneer-tikka.jpg', 1)
+  ], 200, 'COD', 'Cancelled', 5, 'Raiya Road, Rajkot', '9000000003', '02:20 PM'));
+
+  startOrders.push(makeOrder(4, 'aman@example.com', 'Aman', [
+    makeItem(8, 'Masala Dosa', 130, 'masala-dosa.jpg', 2)
+  ], 280, 'Card', 'Delivered', 4, 'Nana Mava Road, Rajkot', '9000000004', '07:40 PM'));
+
+  startOrders.push(makeOrder(5, 'mitul@example.com', 'Mitul', [
+    makeItem(14, 'Gulab Jamun (2 pc)', 90, 'gulab-jamun.jpg', 2),
+    makeItem(15, 'Cold Coffee', 70, 'cold-coffee.jpg', 1)
+  ], 270, 'UPI', 'Delivered', 3, 'Mavdi Main Road, Rajkot', '9000000005', '08:10 PM'));
+
+  startOrders.push(makeOrder(6, 'haresh@example.com', 'Haresh', [
+    makeItem(2, 'Crispy Corn', 140, 'crispy-corn.jpg', 1),
+    makeItem(1, 'Paneer Tikka', 180, 'paneer-tikka.jpg', 1)
+  ], 340, 'COD', 'Delivered', 3, 'Yagnik Road, Rajkot', '9000000006', '08:35 PM'));
+
+  startOrders.push(makeOrder(7, 'vishal@example.com', 'Vishal', [
+    makeItem(7, 'Dal Makhani', 170, 'dal-makhani.jpg', 1),
+    makeItem(9, 'Butter Naan', 50, 'butter-naan.jpg', 2)
+  ], 290, 'UPI', 'Confirmed', 2, 'Gondal Road, Rajkot', '9000000007', '11:20 AM'));
+
+  startOrders.push(makeOrder(8, 'tushar@example.com', 'Tushar', [
+    makeItem(13, 'Paneer Naan Combo', 260, 'paneer-naan-combo.jpg', 1),
+    makeItem(15, 'Cold Coffee', 70, 'cold-coffee.jpg', 1)
+  ], 350, 'Card', 'Preparing', 2, '150 Feet Ring Road, Rajkot', '9000000008', '01:45 PM'));
+
+  startOrders.push(makeOrder(9, 'yashraj@example.com', 'Yashraj', [
+    makeItem(11, 'Special Thali Combo', 320, 'special-thali-combo.jpg', 1),
+    makeItem(18, 'Choco Brownie', 120, 'choco-brownie.jpg', 1)
+  ], 460, 'UPI', 'Confirmed', 1, 'Mavdi Circle, Rajkot', '9000000009', '12:30 PM'));
+
+  startOrders.push(makeOrder(10, 'jenil@example.com', 'Jenil', [
+    makeItem(4, 'Hara Bhara Kebab', 160, 'hara-bhara-kebab.jpg', 1),
+    makeItem(16, 'Rasmalai', 110, 'rasmalai.jpg', 1)
+  ], 290, 'COD', 'Preparing', 1, 'University Road, Rajkot', '9000000010', '06:10 PM'));
+
+  startOrders.push(makeOrder(11, 'pankaj@example.com', 'Pankaj', [
+    makeItem(6, 'Veg Kolhapuri', 200, 'veg-kolhapuri.jpg', 1),
+    makeItem(10, 'Jeera Rice', 110, 'jeera-rice.jpg', 1)
+  ], 330, 'UPI', 'Out for Delivery', 0, 'University Road, Rajkot', '9000000001', '12:05 PM'));
+
+  startOrders.push(makeOrder(12, 'satyam@example.com', 'Satyam', [
+    makeItem(5, 'Paneer Butter Masala', 220, 'paneer-butter-masala.jpg', 1),
+    makeItem(9, 'Butter Naan', 50, 'butter-naan.jpg', 3)
+  ], 390, 'Card', 'Pending', 0, 'Kalawad Road, Rajkot', '9000000002', '01:25 PM'));
+  saveData('fm_orders', startOrders);
+
+  // ---------- 10 sample customer reviews ----------
+  var startReviews = [
+    { id: 1, dishId: 5, name: 'Pankaj', stars: 5, text: 'Creamy, fresh and full of flavour. Arrived hot!', status: 'approved' },
+    { id: 2, dishId: 3, name: 'Satyam', stars: 4, text: 'Very tasty. I would love a little more quantity.', status: 'approved' },
+    { id: 3, dishId: 11, name: 'Harsh', stars: 5, text: 'Great value for money. The thali was filling.', status: 'approved' },
+    { id: 4, dishId: 8, name: 'Aman', stars: 3, text: 'Dosa tasted good but it could have been warmer.', status: 'pending' },
+    { id: 5, dishId: 1, name: 'Mitul', stars: 5, text: 'Paneer was soft and perfectly spiced.', status: 'approved' },
+    { id: 6, dishId: 14, name: 'Haresh', stars: 4, text: 'Fresh and sweet. The packing was neat.', status: 'pending' },
+    { id: 7, dishId: 7, name: 'Vishal', stars: 5, text: 'Dal Makhani was rich and delicious.', status: 'approved' },
+    { id: 8, dishId: 13, name: 'Tushar', stars: 4, text: 'Nice combo and quick delivery.', status: 'pending' },
+    { id: 9, dishId: 18, name: 'Yashraj', stars: 2, text: 'Brownie was a little dry this time.', status: 'rejected' },
+    { id: 10, dishId: 4, name: 'Jenil', stars: 5, text: 'Loved the kebabs. Will order again!', status: 'approved' }
+  ];
+  saveData('fm_reviews', startReviews);
+
+  localStorage.setItem('fm_demo_seed_version', FOODMANIA_DEMO_VERSION);
+}
+
+</script>
+
+  
+<script>
+/* JavaScript from common.js - kept inside this HTML page. */
+// ===== common.js: runs on every client page =====
+
+// show the total number of items in the cart on the navbar
+function updateCartCount() {
+  var cart = getData('fm_cart');
+  var total = 0;
+  for (var i = 0; i < cart.length; i++) {
+    total = total + cart[i].qty;
+  }
+  var box = document.getElementById('cartCount');
+  if (box) {
+    box.innerHTML = total;
+  }
+}
+
+// the logged in user (or null if nobody is logged in)
+function currentUser() {
+  var text = localStorage.getItem('fm_currentUser');
+  if (text === null) {
+    return null;
+  }
+  return JSON.parse(text);
+}
+
+// if a user is logged in, show the first name instead of "Login / Sign Up"
+function showLoginState() {
+  var user = currentUser();
+  var link = document.getElementById('loginLink');
+  if (user !== null && link) {
+    link.innerHTML = 'Hi, ' + user.name.split(' ')[0];
+    link.href = '9-profile.html';
+  }
+}
+
+// highlight the link of the page we are on
+function markActiveLink() {
+  var path = window.location.pathname.split('/');
+  var fileName = path[path.length - 1];
+  var links = document.getElementsByTagName('nav')[0].getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (links[i].getAttribute('href') === fileName) {
+      links[i].className = 'active';
+    }
+  }
+}
+
+function logoutUser() {
+  localStorage.removeItem('fm_currentUser');
+  window.location.href = '1-home.html';
+}
+
+// add a dish to the cart (or increase the quantity if it is already there)
+function addToCart(id, qty) {
+  var menu = getData('fm_menu');
+  var cart = getData('fm_cart');
+  var dish = null;
+  for (var i = 0; i < menu.length; i++) {
+    if (menu[i].id === id) {
+      dish = menu[i];
+    }
+  }
+  if (dish === null) {
+    return;
+  }
+  var found = false;
+  for (var j = 0; j < cart.length; j++) {
+    if (cart[j].id === id) {
+      cart[j].qty = cart[j].qty + qty;
+      found = true;
+    }
+  }
+  if (found === false) {
+    cart.push({ id: id, name: dish.name, price: dish.price, image: dish.image, qty: qty });
+  }
+  saveData('fm_cart', cart);
+  updateCartCount();
+}
+
+// the "- 1 +" buttons on a dish card (quantity stays between 1 and 10)
+function stepQty(id, change) {
+  var box = document.getElementById('q' + id);
+  var n = Number(box.innerHTML) + change;
+  if (n < 1) {
+    n = 1;
+  }
+  if (n > 10) {
+    n = 10;
+  }
+  box.innerHTML = n;
+}
+
+// the "Add to Cart" button on a dish card
+function addFromCard(id) {
+  var qty = Number(document.getElementById('q' + id).innerHTML);
+  addToCart(id, qty);
+  alert('Added to cart');
+}
+
+// builds the HTML of one dish card (used on home, menu and dish detail pages)
+function dishCard(dish) {
+  var html = '';
+  html = html + '<div class="card">';
+  html = html + '<a href="6-dish-detail.html?id=' + dish.id + '">';
+  html = html + '<img class="dish-img" src="' + imgPath(dish.image) + '" alt="' + dish.name + '">';
+  html = html + '</a>';
+  html = html + '<div class="card-body">';
+  html = html + '<h3>' + dish.name + '</h3>';
+  html = html + '<p class="muted">' + money(dish.price) + '</p>';
+  html = html + '<div class="card-row">';
+  html = html + '<span class="stepper">';
+  html = html + '<button onclick="stepQty(' + dish.id + ', -1)">-</button>';
+  html = html + '<span id="q' + dish.id + '">1</span>';
+  html = html + '<button onclick="stepQty(' + dish.id + ', 1)">+</button>';
+  html = html + '</span>';
+  html = html + '<button class="btn btn-sm" onclick="addFromCard(' + dish.id + ')">Add to Cart</button>';
+  html = html + '</div></div></div>';
+  return html;
+}
+
+updateCartCount();
+showLoginState();
+markActiveLink();
+
+</script>
+
+  
+<script>
+/* JavaScript from home.js - kept inside this HTML page. */
+// ===== home.js: popular dishes and customer reviews on the home page =====
+
+// ---- popular dishes: the 4 dishes with the highest popularity ----
+var menu = getData('fm_menu');
+
+// sort: bigger popularity first
+menu.sort(function (a, b) {
+  return b.popularity - a.popularity;
+});
+
+var dishHtml = '';
+var shown = 0;
+for (var i = 0; i < menu.length; i++) {
+  if (menu[i].available === true && shown < 4) {
+    dishHtml = dishHtml + dishCard(menu[i]);
+    shown = shown + 1;
+  }
+}
+document.getElementById('popular').innerHTML = dishHtml;
+
+// ---- customer reviews: first 3 reviews that the admin approved ----
+var reviews = getData('fm_reviews');
+var reviewHtml = '';
+var count = 0;
+for (var j = 0; j < reviews.length; j++) {
+  if (reviews[j].status === 'approved' && count < 3) {
+    reviewHtml = reviewHtml + '<div class="review">';
+    reviewHtml = reviewHtml + '<div class="stars">' + starText(reviews[j].stars) + '</div>';
+    reviewHtml = reviewHtml + '<p>"' + reviews[j].text + '"</p>';
+    reviewHtml = reviewHtml + '<b>- ' + reviews[j].name + '</b>';
+    reviewHtml = reviewHtml + '</div>';
+    count = count + 1;
+  }
+}
+document.getElementById('reviews').innerHTML = reviewHtml;
+
+</script>
+
+
+<!-- Load the bundled local pictures after page content is ready. -->
+<script>loadFoodPageImages();</script>
+</body>
+</html>
