@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Food Mania - JavaScript Validation Demo</title>
+  <style>
+    /* All CSS for this validation page is written here. */
+    :root { --green:#287642; --dark:#174d2d; --orange:#ed7927; --pale:#edf7ef; }
+    * { box-sizing:border-box; }
+    body { margin:0; padding:24px; background:#f6f7f2; color:#263238; font-family:Arial,Helvetica,sans-serif; }
+    .wrap { max-width:720px; margin:20px auto; background:#fff; padding:28px; border-radius:14px; box-shadow:0 4px 18px rgba(0,0,0,.08); }
+    h1 { color:var(--dark); margin-top:0; }
+    p { line-height:1.5; }
+    label { display:block; margin-top:15px; font-weight:bold; font-size:14px; }
+    input { width:100%; padding:11px; margin-top:6px; border:1px solid #cfd8ce; border-radius:7px; font-size:15px; }
+    input:focus { outline:2px solid var(--orange); border-color:var(--orange); }
+    .error { color:#c62828; min-height:18px; font-size:13px; }
+    button { margin-top:20px; padding:12px 22px; border:0; border-radius:7px; background:var(--orange); color:white; font-weight:bold; cursor:pointer; }
+    .back { color:var(--green); display:inline-block; margin-top:18px; }
+    .note { background:var(--pale); border-left:4px solid var(--green); padding:12px; border-radius:6px; }
+  </style>
+</head>
+<body>
+  <!-- This page demonstrates five JavaScript validation rules. -->
+  <main class="wrap">
+    <h1>Food Mania - JavaScript Validation</h1>
+    <p class="note">Test the five rules: required fields, email format, password length, password pattern and phone number.</p>
+    <form id="validationForm" onsubmit="return checkAllFields()">
+      <label for="vName">Full Name</label>
+      <input id="vName" type="text" placeholder="Enter your name">
+      <div class="error" id="nameError"></div>
+
+      <label for="vEmail">Email Address</label>
+      <input id="vEmail" type="text" placeholder="name@example.com">
+      <div class="error" id="emailError"></div>
+
+      <label for="vPassword">Password</label>
+      <input id="vPassword" type="password" placeholder="Example: Food@123">
+      <div class="error" id="passwordError"></div>
+
+      <label for="vPhone">Phone Number</label>
+      <input id="vPhone" type="text" placeholder="10 digit mobile number">
+      <div class="error" id="phoneError"></div>
+
+      <button type="submit">Test Validation</button>
+    </form>
+    <a class="back" href="1-home.html">← Back to Food Mania</a>
+  </main>
+
+  <!-- JavaScript validation is written in this same HTML page. -->
+  <script>
+    // Check whether the email has one @ and a dot after it.
+    function isEmailValid(email) {
+      var atPosition = email.indexOf('@');
+      var dotPosition = email.lastIndexOf('.');
+      if (atPosition < 1 || dotPosition < atPosition + 2 || dotPosition === email.length - 1) {
+        return false;
+      }
+      if (email.indexOf(' ') !== -1 || email.indexOf('@', atPosition + 1) !== -1) {
+        return false;
+      }
+      return true;
+    }
+
+    // Check whether the password has a capital, small, number and special character.
+    function isPasswordStrong(password) {
+      var capital = false;
+      var small = false;
+      var number = false;
+      var special = false;
+      var specialCharacters = '@#$%&*!';
+      for (var i = 0; i < password.length; i++) {
+        var letter = password.charAt(i);
+        if (letter >= 'A' && letter <= 'Z') { capital = true; }
+        else if (letter >= 'a' && letter <= 'z') { small = true; }
+        else if (letter >= '0' && letter <= '9') { number = true; }
+        else if (specialCharacters.indexOf(letter) !== -1) { special = true; }
+      }
+      return capital && small && number && special;
+    }
+
+    // Check that the phone number has 10 digits and starts from 6 to 9.
+    function isPhoneValid(phone) {
+      if (phone.length !== 10) { return false; }
+      if (phone.charAt(0) < '6' || phone.charAt(0) > '9') { return false; }
+      for (var i = 0; i < phone.length; i++) {
+        if (phone.charAt(i) < '0' || phone.charAt(i) > '9') { return false; }
+      }
+      return true;
+    }
+
+    // Run all five checks when the user submits the form.
+    function checkAllFields() {
+      var name = document.getElementById('vName').value.trim();
+      var email = document.getElementById('vEmail').value.trim();
+      var password = document.getElementById('vPassword').value;
+      var phone = document.getElementById('vPhone').value.trim();
+      var valid = true;
+
+      // Rule 1: required fields must not be empty.
+      document.getElementById('nameError').innerHTML = '';
+      document.getElementById('emailError').innerHTML = '';
+      document.getElementById('passwordError').innerHTML = '';
+      document.getElementById('phoneError').innerHTML = '';
+      if (name === '' || email === '' || password === '' || phone === '') {
+        document.getElementById('nameError').innerHTML = name === '' ? 'Name is required.' : '';
+        document.getElementById('emailError').innerHTML = email === '' ? 'Email is required.' : '';
+        document.getElementById('passwordError').innerHTML = password === '' ? 'Password is required.' : '';
+        document.getElementById('phoneError').innerHTML = phone === '' ? 'Phone number is required.' : '';
+        valid = false;
+      }
+
+      // Rule 2: email must be in a correct format.
+      if (email !== '' && isEmailValid(email) === false) {
+        document.getElementById('emailError').innerHTML = 'Enter a valid email address.';
+        valid = false;
+      }
+
+      // Rule 3: password must contain at least 8 characters.
+      if (password !== '' && password.length < 8) {
+        document.getElementById('passwordError').innerHTML = 'Password must contain at least 8 characters.';
+        valid = false;
+      }
+
+      // Rule 4: password must contain different character types.
+      if (password !== '' && isPasswordStrong(password) === false) {
+        document.getElementById('passwordError').innerHTML = 'Use uppercase, lowercase, number and special character.';
+        valid = false;
+      }
+
+      // Rule 5: phone number must be a valid 10 digit Indian mobile number.
+      if (phone !== '' && isPhoneValid(phone) === false) {
+        document.getElementById('phoneError').innerHTML = 'Enter a valid 10 digit mobile number.';
+        valid = false;
+      }
+
+      if (valid === true) {
+        alert('All five validation rules passed!');
+      }
+      return false; // Keep this demo page open after testing.
+    }
+  </script>
+</body>
+</html>
